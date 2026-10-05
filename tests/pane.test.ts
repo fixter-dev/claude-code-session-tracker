@@ -299,3 +299,29 @@ test('a refresh that fails is shown in the pane and cleared by the next one', as
 
   await ui.unmount()
 })
+
+test('a session that draws somewhere but is not interactive still refreshes', async ($, on) => {
+  const clock = mock.clock(on, { now: NOW })
+  mock.store(on, {})
+  mock.env(on, { HOME })
+  let polls = 0
+
+  on('session.id', () => ({ value: 'self' }))
+  on('session.usage', () => ({ value: { startedAt: NOW, context: { window: 1_000_000 }, rateLimits: [] } }))
+  on('session.start', ($, e) => ({ cwd: e.cwd }))
+  on('command.register', ($, e) => ({ value: { command: e.name } }))
+  on('ui.open', () => ({ value: { isPlaced: true } }))
+  on('ui.panes', () => ({ value: [{ id: 'sessions', title: 'Sessions', isShown: true, isFocused: false, isPlaced: true }] }))
+  on('ui.log', () => ({ value: undefined }))
+  on('fs.list', () => {
+    polls += 1
+
+    return { value: [] }
+  })
+
+  await $.session.start({ cwd: '/work/docs', surface: 'desktop', isInteractive: false })
+  await clock.settle()
+  expect(polls, 'polled at start').toBe(1)
+  await clock.advance(3000)
+  expect(polls, 'polled on the timer').toBe(2)
+})

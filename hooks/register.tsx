@@ -594,7 +594,9 @@ export const register: Register = (on, options) => {
 
     await loadStoredFlags($)
 
-    if (e.isInteractive) {
+    // A desktop session may not count as interactive; anything that draws
+    // somewhere gets the sidebar and its refreshes. Only a bare `-p` run is out.
+    if (e.isInteractive || e.surface !== null) {
       void $.ui.open(paneArgs)
       void poll($, { isAliveDue: true })
       $.clock.every(POLL_MS, () => {
