@@ -1,0 +1,25 @@
+{
+  "name": "session-tracker",
+  "version": "0.2.0",
+  "description": "A sidebar listing every open Claude Code session, the ones that need you first",
+  "author": { "name": "fixter-dev" },
+  "homepage": "https://github.com/fixter-dev/claude-code-session-tracker",
+  "repository": "https://github.com/fixter-dev/claude-code-session-tracker",
+  "license": "MIT",
+  "keywords": ["mod", "sessions", "sidebar", "pane"],
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "width": {
+      "type": "number",
+      "title": "Sidebar width",
+      "description": "How many columns the sidebar opens at when docked; drag its edge to resize it at any time",
+      "default": 56
+    },
+    "finishedHours": {
+      "type": "number",
+      "title": "Finished for how long",
+      "description": "A session that finished a turn stays under Finished this many hours unless dismissed, then counts as idle",
+      "default": 4
+    }
+  }
+}

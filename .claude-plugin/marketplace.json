@@ -1,0 +1,8 @@
+{
+  "name": "claude-code-session-tracker",
+  "owner": { "name": "fixter-dev" },
+  "metadata": {
+    "description": "A sidebar for Claude Code that tracks every open session, the ones that need you first"
+  },
+  "plugins": [{ "name": "session-tracker", "source": "./" }]
+}
