@@ -27,10 +27,10 @@ export type Meta = {
   model: string
 }
 
-// Which finished turns the person has already dismissed: everything before
-// `baseline`, and per session everything up to its `acked` time.
+// Which finished turns the person has already dismissed: per session,
+// everything up to its `acked` time. (Older stores also carry a `baseline`
+// from the first run; it is ignored, the Finished window bounds that now.)
 export type Seen = {
-  baseline: number
   acked: Record<string, number>
 }
 
@@ -127,9 +127,9 @@ export const isSeen = (value: unknown): value is Seen => {
     return false
   }
 
-  const { baseline, acked } = value as Record<string, unknown>
+  const { acked } = value as Record<string, unknown>
 
-  return typeof baseline === 'number' && typeof acked === 'object' && acked !== null
+  return typeof acked === 'object' && acked !== null
 }
 
 export const projectOf = (cwd: string): string =>
@@ -381,7 +381,7 @@ export const tierOf = (
     return 'busy'
   }
 
-  const seenAt = Math.max(seen.baseline, seen.acked[record.sessionId] ?? 0)
+  const seenAt = seen.acked[record.sessionId] ?? 0
   const hasTurn = record.statusUpdatedAt - record.startedAt > TURN_MIN_MS
   const isRecent = now - record.statusUpdatedAt < finishedMs
 

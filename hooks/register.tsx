@@ -195,12 +195,7 @@ const loadSeen = async ($: EngineInterface, now: number): Promise<Seen> => {
   }
 
   const held = await $.store.get('seen')
-  // First run: every turn that ended before now counts as already seen.
-  const seen: Seen = isSeen(held) ? held : { baseline: now, acked: {} }
-
-  if (!isSeen(held)) {
-    await $.store.set('seen', seen)
-  }
+  const seen: Seen = isSeen(held) ? { acked: held.acked } : { acked: {} }
 
   seenHeld = { value: seen, at: now }
 
@@ -463,7 +458,7 @@ const markSeen = async ($: EngineInterface, sessionIds: readonly string[]): Prom
   const kept = Object.entries(seen.acked).filter(([id]) => known.size === 0 || known.has(id))
   const acked = Object.fromEntries([...kept, ...sessionIds.map(id => [id, now] as const)])
 
-  await saveSeen($, { baseline: seen.baseline, acked }, now)
+  await saveSeen($, { acked }, now)
   await poll($)
 }
 

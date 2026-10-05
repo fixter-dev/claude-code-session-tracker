@@ -108,7 +108,7 @@ test('ages read as now, minutes, hours, days', () => {
 })
 
 test('rows sort waiting, finished, busy, idle, and leave this session out', () => {
-  const seen = { baseline: NOW - 3_600_000, acked: { acked: NOW } }
+  const seen = { acked: { acked: NOW } }
   const metas = new Map<string, Meta>([
     ['done', { ...META, title: 'Monitoring env down', lastPrompt: 'do the pr', branch: 'fix/x' }],
   ])
@@ -193,7 +193,7 @@ test('context is the newest main-thread response, against a known window', () =>
   const built = buildRows(
     ['self', 'same', 'other', 'long', 'fresh'].map((sessionId, pid) => record({ pid: pid + 1, sessionId })),
     metas,
-    { baseline: NOW, acked: {} },
+    { acked: {} },
     NOW,
     'self',
     1_000_000,
@@ -214,7 +214,7 @@ test('context is the newest main-thread response, against a known window', () =>
 test('a turn that finished long ago is idle, within the window finished', () => {
   // a real epoch time, so hours ago stay positive
   const T = 1_800_000_000_000
-  const seen = { baseline: T - 48 * 3_600_000, acked: {} }
+  const seen = { acked: {} }
   const rowsFor = (hoursAgo: number, finishedMs?: number) =>
     buildRows(
       [record({ sessionId: 'x', startedAt: T - 72 * 3_600_000, statusUpdatedAt: T - hoursAgo * 3_600_000 })],
@@ -228,12 +228,14 @@ test('a turn that finished long ago is idle, within the window finished', () => 
     ).rows[0]?.tier
 
   expect(rowsFor(1)).toBe('done')
+  // a fresh store too: nothing is "seen" until dismissed
+  expect(buildRows([record({ startedAt: T - 3_600_000, statusUpdatedAt: T - 6 * 60_000 })], new Map(), { acked: {} }, T, 'self').rows[0]?.tier).toBe('done')
   expect(rowsFor(19)).toBe('idle')
   expect(rowsFor(19, 24 * 3_600_000)).toBe('done')
 })
 
 test('a session that was only opened is idle, not finished', () => {
-  const seen = { baseline: NOW - 3_600_000, acked: {} }
+  const seen = { acked: {} }
   const opened = record({ sessionId: 'new', startedAt: NOW - 60_000, statusUpdatedAt: NOW - 60_000 })
   const turned = record({ sessionId: 'old', startedAt: NOW - 600_000, statusUpdatedAt: NOW - 60_000 })
 
@@ -257,7 +259,7 @@ test('a pid is live only with the start time the registry recorded', () => {
 })
 
 test('arrivals are sessions that moved into waiting or finished', () => {
-  const seen = { baseline: NOW - 3_600_000, acked: {} }
+  const seen = { acked: {} }
   const { rows } = buildRows(
     [
       record({ pid: 1, sessionId: 'a', status: 'waiting' }),

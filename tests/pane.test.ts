@@ -49,14 +49,14 @@ const texts = async (ui: { findAll: (q: { type: string }) => Promise<{ text: str
 
 test('the pane lists the other sessions, finished first, hiding the dead, headless and reused', async ($, on) => {
   const clock = mock.clock(on, { now: NOW })
-  mock.store(on, { seen: { baseline: NOW - 3_600_000, acked: {} } })
+  mock.store(on, {})
   mock.env(on, { HOME })
 
   const files: Record<string, { text: string; mtimeMs: number }> = {
     '101.json': { text: session(101, 'self', 'docs', 'busy', 1000), mtimeMs: 1 },
     '202.json': { text: session(202, 'finished', 'ingestion-service', 'idle', 120_000), mtimeMs: 1 },
     '303.json': { text: session(303, 'working', 'sales', 'busy', 5000), mtimeMs: 1 },
-    '404.json': { text: session(404, 'stale', 'customer', 'idle', 7_200_000), mtimeMs: 1 },
+    '404.json': { text: session(404, 'stale', 'customer', 'idle', 5 * 3_600_000), mtimeMs: 1 },
     '505.json': { text: session(505, 'crashed', 'ghost', 'idle', 60_000), mtimeMs: 1 },
     '606.json': { text: session(606, 'headless', 'feeder-cwd', 'busy', 1000, { kind: 'sdk' }), mtimeMs: 1 },
     '707.json': { text: session(707, 'reused', 'zombie', 'idle', 60_000), mtimeMs: 1 },
