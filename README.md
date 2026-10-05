@@ -69,7 +69,8 @@ Both are rows in `/config`.
 - **Context percentages are partly inferred.** A transcript does not record the model's window, so sessions on this session's model use its window, anything past 200k tokens is taken as a 1M window, and the rest show tokens only.
 - **Finished is a guess.** The mod cannot tell whether you looked at a terminal, so a session stays Finished until you dismiss it, it works again, or the hours run out.
 - **Pins, dismissals and the sort order are shared** by every session on the machine, under `~/.claude/plugins/store/`.
-- **Early access API.** Mods can change between Claude Code releases, so an update may break this one. Tested with Claude Code 2.1.289 on macOS, in a terminal and in the Claude desktop app's Code tab. Sounds play through `afplay`, so there is none on Linux or Windows; `ps`, `grep`, `tail` and `git` are expected on the PATH.
+- **Early access API.** Mods can change between Claude Code releases, so an update may break this one.
+- **macOS first.** Sounds play through `afplay`, so there is none on Linux or Windows; `ps`, `grep`, `tail` and `git` are expected on the PATH.
 - **Unofficial.** This project is not affiliated with or endorsed by Anthropic.
 
 ## License
