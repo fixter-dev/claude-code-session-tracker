@@ -2,6 +2,8 @@
 
 An unofficial [Claude Code mod](https://code.claude.com/docs/en/plugins/mods/overview) that opens a sidebar listing every Claude Code session open on your machine, the ones that need you first. It tells you when another session finishes or waits on you, and lets you message or close a session without switching to it.
 
+Built for running many Claude Code sessions at once: when long tasks run in six or seven sessions, it shows which one finished and which one is waiting on you. The full write-up: [Manage multiple Claude Code sessions from one sidebar](https://fixter.dev/blog/claude-code-session-tracker). Pairs with [session-pings](https://github.com/fixter-dev/session-pings), our notifications mod, for when you are away from the terminal.
+
 ![Claude Code 2.1.289+](https://img.shields.io/badge/Claude%20Code-2.1.289%2B-d97757)
 ![Mods API: early access](https://img.shields.io/badge/mods%20API-early%20access-orange)
 ![Unofficial](https://img.shields.io/badge/status-unofficial-lightgrey)
@@ -76,3 +78,7 @@ Both are rows in `/config`.
 ## License
 
 [MIT](LICENSE)
+
+---
+
+Made by [Fixter](https://fixter.dev), monitoring for teams that build with coding agents.
